@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/23 18:23:09 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/23 20:08:49 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	process(int i, t_pipex *prog)
 	if(!prog->cmd_arr[i + 1])
 		fd_out = prog->fd_outfile;
 	else
-		fd_out = prog->fd[i];
+		fd_out = prog->fd[1];
 	dup2(fd_in, STDIN_FILENO);
 	close(fd_in);
 	dup2(fd_out, STDOUT_FILENO);

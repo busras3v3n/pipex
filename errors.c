@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:57:17 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/23 15:13:18 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/23 18:29:24 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,20 @@ void	free_prog(t_pipex *prog)
 	int i;
 
 	i = 0;
-	close(prog->fd_infile);
-	close(prog->fd_outfile);
-	while(prog->cmd_arr[i])
+	if(prog->fd_infile >= 0)
+		close(prog->fd_infile);
+	if(prog->fd_outfile >= 0)
+		close(prog->fd_outfile);
+	while(prog->cmd_arr && prog->cmd_arr[i])
 	{
-		ft_freeall(prog->cmd_arr[i]->arg_arr);
-		free(cmd_arr[i]->path);
+		if(prog->cmd_arr[i]->arg_arr)
+			ft_freeall(prog->cmd_arr[i]->arg_arr);
+		if(prog->cmd_arr[i]->path)
+			free(prog->cmd_arr[i]->path);
 		i++;
 	}
-	free(prog->cmd_arr);
+	if(prog->cmd_arr)
+		free(prog->cmd_arr);
 	free(prog);
 }
 void	invalid_file(t_pipex *prog)
@@ -38,12 +43,10 @@ void	invalid_file(t_pipex *prog)
 	ft_printf("Error\n");
 	if(prog->fd_infile < 0)
 		ft_printf("invalid infile\n");
-	if(prog->outfile < 0)
+	if(prog->fd_outfile < 0)
 		ft_printf("invalid outfile\n");
-	free_prog(prog);
 }
-void	invalid_command(t_pipex *prog, char *cmd)
+void	invalid_command(char *cmd)
 {
 	ft_printf("Error\n %s does not exist", cmd);
-	free_prog(prog);
 }

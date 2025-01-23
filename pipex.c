@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/23 15:38:12 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/23 18:23:09 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,11 @@
 #include "./ft_printf/libft/libft.h"
 #include <fcntl.h>
 #include "pipex.h"
+#include <stdio.h>
+#include <signal.h>
 
 void	process(int i, t_pipex *prog)
 {
-	int id;
 	int fd_in;
 	int fd_out;
 
@@ -31,13 +32,10 @@ void	process(int i, t_pipex *prog)
 		fd_out = prog->fd_outfile;
 	else
 		fd_out = prog->fd[i];
-	if(id == 0)
-	{
-		dup2(fd_in, STDIN_FILENO);
-		close(fd_in);
-		dup2(fd_out, STDOUT_FILENO);
-		close(fd_out);
-	}
+	dup2(fd_in, STDIN_FILENO);
+	close(fd_in);
+	dup2(fd_out, STDOUT_FILENO);
+	close(fd_out);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -63,14 +61,17 @@ int	main(int argc, char **argv, char **env)
 	while(prog->cmd_arr[i])
 	{
 		if(id != 0)
+			id = fork();
+		if(id != 0)
 		{
 			ft_printf("parent process\n");
 		}
 		if(id == 0)
 		{
-			process(i, prog);
 			ft_printf("child process %d\n", i);
+			return 0;
 		}
 		i++;
 	}
+	wait(NULL);
 }

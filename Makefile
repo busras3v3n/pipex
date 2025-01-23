@@ -6,11 +6,11 @@
 #    By: busseven <busseven@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/22 09:59:40 by busseven          #+#    #+#              #
-#    Updated: 2025/01/22 11:56:20 by busseven         ###   ########.fr        #
+#    Updated: 2025/01/23 14:21:15 by busseven         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRC 		= 	./pipex.c ./utils.c
+SRC 		= 	./pipex.c ./utils.c ./errors.c
 OBJS 		= $(SRC:.c=.o)
 
 NAME 		= pipex.a

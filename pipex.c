@@ -1,63 +1,76 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
+/*   Updated: 2025/01/23 15:38:12 by busseven         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <unistd.h>
 #include <sys/wait.h>
 #include "./ft_printf/ft_printf.h"
 #include "./ft_printf/libft/libft.h"
 #include <fcntl.h>
+#include "pipex.h"
 
-char	**make_command_arr(char *cmd)
+void	process(int i, t_pipex *prog)
 {
-	char **cmd_arr;
+	int id;
+	int fd_in;
+	int fd_out;
 
-	cmd_arr = ft_split(cmd, ' ');
-	return(cmd_arr);
-}
-
-char	**extract_env_path(char **env)
-{
-	int i = 0;
-	char	**path_arr;
-
-	while(env[i])
+	if(i == 0)
+		fd_in = prog->fd_infile;
+	else
+		fd_in = prog->fd[0];
+	if(!prog->cmd_arr[i + 1])
+		fd_out = prog->fd_outfile;
+	else
+		fd_out = prog->fd[i];
+	if(id == 0)
 	{
-		if(!ft_strncmp(env[i], "PATH=", 5))
-		{
-			path_arr = ft_split(env[i] + 5, ':');
-		}
-		i++;
+		dup2(fd_in, STDIN_FILENO);
+		close(fd_in);
+		dup2(fd_out, STDOUT_FILENO);
+		close(fd_out);
 	}
-	return(path_arr);
 }
-char	*find_correct_path(char **cmd_arr, char **paths)
-{
-	int i = 0;
-	char *path;
-	while(paths[i])
-	{
-		path = ft_join(cmd_arr[0], paths[i]);
-		if(access(path, F_OK | X_OK) == 0);
-			break ;
-		free(path);
-		i++;
-	}
-	return (path);
-}
+
 int	main(int argc, char **argv, char **env)
 {
-	int i = 0;
+	t_pipex *prog;
+	int i;
 	int id;
-	char **paths;
-	if(argc == 5 && argv && env[i])
+
+	i = 0;
+	id = 1;
+	if(argc >= 5)
 	{
-		paths = extract_env_path(env);
-		id = fork();
-		if(id == 0)
-		{
-			child_process(argv[1], );
-		}
-		else
-			parent_process(argv[2], );
-		ft_freeall(paths);
+		prog = ft_calloc(1, sizeof(t_pipex));
+		init_program(prog, argv, env, argc);
+		if(prog->fd_infile < 0 || prog->fd_outfile < 0)
+			invalid_file(prog);
 	}
 	else
+	{
 		write(1, "incorrect number of arguments\n", 30);
+		return 0;
+	}
+	while(prog->cmd_arr[i])
+	{
+		if(id != 0)
+		{
+			ft_printf("parent process\n");
+		}
+		if(id == 0)
+		{
+			process(i, prog);
+			ft_printf("child process %d\n", i);
+		}
+		i++;
+	}
 }

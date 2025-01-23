@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 12:06:33 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/23 18:21:51 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/23 20:16:32 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@ char	**extract_env_path(char **env)
 	while(env[i])
 	{
 		if(!ft_strncmp(env[i], "PATH=", 5))
+		{
 			path_arr = ft_split(env[i] + 5, ':');
+			break ;
+		}
 
 		i++;
 	}

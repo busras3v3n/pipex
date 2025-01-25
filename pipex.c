@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/25 18:51:03 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/25 19:12:01 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,20 +50,15 @@ int	main(int argc, char **argv, char **env)
 		while(i <= 1)
 		{
 			if(id != 0)
-			{
 				id = fork();
-			}
 			if(id == 0)
-			{
-				ft_printf("child %d\n", i);
 				process(i, prog, env);
-				return 0;
-			}
 			else
 				ft_printf("parent\n");
 			i++;
 		}
 		wait(NULL);
+		free_prog(prog);
 	}
 	else
 		ft_printf("incorrect number of arguments\n");

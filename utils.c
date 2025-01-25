@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 12:06:33 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/25 17:51:26 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/25 18:34:31 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	**extract_env_path(char **env)
 	return(path_arr);
 }
 
-char	*find_correct_path(char *cmd_arr, char **paths)
+char	*find_correct_path(char *cmd, char **paths)
 {
 	int i = 0;
 	char *path;
@@ -60,7 +60,7 @@ char	*find_correct_path(char *cmd_arr, char **paths)
 	while(paths[i])
 	{
 		temp = ft_strjoin(paths[i], c);
-		path = ft_strjoin(temp, cmd_arr);
+		path = ft_strjoin(temp, cmd);
 		if(access(path, F_OK | X_OK) == 0)
 			break ;
 		free(path);
@@ -76,4 +76,19 @@ char	**make_command_arr(char *cmd)
 
 	cmd_arr = ft_split(cmd, ' ');
 	return(cmd_arr);
+}
+
+void	init_program(t_pipex *prog, char **argv, char **env)
+{
+	prog->fd_infile = open(argv[1], O_RDWR);
+	prog->fd_outfile = open(argv[4], O_RDWR);
+	prog->cmd_arr = ft_calloc(2, sizeof(t_cmd));
+	prog->paths = extract_env_path(env);
+	prog->cmd_arr[0] = ft_calloc(1, sizeof(t_cmd));
+	prog->cmd_arr[1] = ft_calloc(1, sizeof(t_cmd));
+	prog->cmd_arr[0]->arg_arr = make_command_arr(argv[2]);
+	prog->cmd_arr[1]->arg_arr = make_command_arr(argv[3]);
+	prog->cmd_arr[0]->path = find_correct_path(prog->cmd_arr[0]->arg_arr[0], prog->paths);
+	prog->cmd_arr[1]->path = find_correct_path(prog->cmd_arr[1]->arg_arr[0], prog->paths);
+	pipe(prog->fd);
 }

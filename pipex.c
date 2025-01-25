@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/25 17:52:20 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/25 18:51:03 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,26 +19,52 @@
 #include <stdio.h>
 #include <signal.h>
 
+void	process(int i, t_pipex *prog, char **env)
+{
+	if(i == 0)
+	{
+		dup2(prog->fd_infile, 0);
+		dup2(prog->fd[1], 1);
+		close(prog->fd[0]);
+		execve(prog->cmd_arr[0]->path, prog->cmd_arr[0]->arg_arr, env);
+	}
+	if(i == 1)
+	{
+		dup2(prog->fd_outfile, 1);
+		dup2(prog->fd[0], 0);
+		close(prog->fd[1]);
+		execve(prog->cmd_arr[1]->path, prog->cmd_arr[1]->arg_arr, env);
+	}
+}
 int	main(int argc, char **argv, char **env)
 {
-	if(argc && argv)
+	t_pipex *prog;
+	int id;
+	int i;
+	i = 0;
+	id = 1;
+	if(argc == 5)
 	{
-		char *correct_path;
-		char **env_path;
-		env_path = extract_env_path(env);
-		int i = 0;
-		while(env_path[i])
+		prog = ft_calloc(1, sizeof(t_pipex));
+		init_program(prog, argv, env);
+		while(i <= 1)
 		{
-			ft_printf("%s\n", env_path[i]);
+			if(id != 0)
+			{
+				id = fork();
+			}
+			if(id == 0)
+			{
+				ft_printf("child %d\n", i);
+				process(i, prog, env);
+				return 0;
+			}
+			else
+				ft_printf("parent\n");
 			i++;
 		}
-		i = 1;
-		while(argv[i])
-		{
-			correct_path = find_correct_path(argv[i], env_path);
-			ft_printf("correct path: %s for %s\n", correct_path, argv[i]);
-			free(correct_path);
-			i++;
-		}
+		wait(NULL);
 	}
+	else
+		ft_printf("incorrect number of arguments\n");
 }

@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 12:06:33 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/25 18:34:31 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/25 19:15:45 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,23 @@
 #include <fcntl.h>
 #include "pipex.h"
 
-char	**ft_freeall(char **arr)
+void	free_prog(t_pipex *prog)
+{
+	close(prog->fd[0]);
+	close(prog->fd[1]);
+	close(prog->fd_infile);
+	close(prog->fd_outfile);
+	ft_free_2d_arr(prog->cmd_arr[0]->arg_arr);
+	ft_free_2d_arr(prog->cmd_arr[1]->arg_arr);
+	ft_free_2d_arr(prog->paths);
+	free(prog->cmd_arr[0]->path);
+	free(prog->cmd_arr[1]->path);
+	free(prog->cmd_arr[0]);
+	free(prog->cmd_arr[1]);
+	free(prog->cmd_arr);
+	free(prog);
+}
+char	**ft_free_2d_arr(char **arr)
 {
 	int	i;
 
@@ -62,7 +78,10 @@ char	*find_correct_path(char *cmd, char **paths)
 		temp = ft_strjoin(paths[i], c);
 		path = ft_strjoin(temp, cmd);
 		if(access(path, F_OK | X_OK) == 0)
+		{
+			free(temp);
 			break ;
+		}
 		free(path);
 		free(temp);
 		i++;

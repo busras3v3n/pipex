@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:57:17 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/25 16:57:42 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/25 19:11:48 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,6 @@
 #include <fcntl.h>
 #include "pipex.h"
 
-void	free_prog(t_pipex *prog)
-{
-	int i;
-
-	i = 0;
-	while(prog->cmd_arr && prog->cmd_arr[i])
-	{
-		if(prog->cmd_arr[i]->arg_arr)
-			ft_freeall(prog->cmd_arr[i]->arg_arr);
-		if(prog->cmd_arr[i]->path)
-			free(prog->cmd_arr[i]->path);
-		i++;
-	}
-	if(prog->cmd_arr)
-		free(prog->cmd_arr);
-	free(prog);
-}
 void	invalid_file(t_pipex *prog)
 {
 	ft_printf("Error\n");

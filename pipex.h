@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:21:45 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/25 18:17:52 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/25 19:13:43 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,6 @@ char	**extract_env_path(char **env);
 char	*find_correct_path(char *cmd_arr, char **paths);
 char	**make_command_arr(char *cmd);
 void	init_program(t_pipex *prog, char **argv, char **env);
+char	**ft_free_2d_arr(char **arr);
 
 #endif

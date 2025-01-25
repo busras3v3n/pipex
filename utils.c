@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 12:06:33 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/25 19:15:45 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/25 19:32:05 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,22 @@
 
 void	free_prog(t_pipex *prog)
 {
-	close(prog->fd[0]);
-	close(prog->fd[1]);
+	int i;
+	
+	i = 0;
+
+	while(i <= 1)
+	{
+		close(prog->fd[i]);
+		ft_free_2d_arr(prog->cmd_arr[i]->arg_arr);
+		if(prog->cmd_arr[i]->path)
+			free(prog->cmd_arr[i]->path);
+		free(prog->cmd_arr[i]);
+		i++;
+	}
 	close(prog->fd_infile);
 	close(prog->fd_outfile);
-	ft_free_2d_arr(prog->cmd_arr[0]->arg_arr);
-	ft_free_2d_arr(prog->cmd_arr[1]->arg_arr);
 	ft_free_2d_arr(prog->paths);
-	free(prog->cmd_arr[0]->path);
-	free(prog->cmd_arr[1]->path);
-	free(prog->cmd_arr[0]);
-	free(prog->cmd_arr[1]);
 	free(prog->cmd_arr);
 	free(prog);
 }
@@ -80,13 +85,13 @@ char	*find_correct_path(char *cmd, char **paths)
 		if(access(path, F_OK | X_OK) == 0)
 		{
 			free(temp);
-			break ;
+			return (path);
 		}
 		free(path);
 		free(temp);
 		i++;
 	}
-	return (path);
+	return (NULL);
 }
 
 char	**make_command_arr(char *cmd)
@@ -110,4 +115,8 @@ void	init_program(t_pipex *prog, char **argv, char **env)
 	prog->cmd_arr[0]->path = find_correct_path(prog->cmd_arr[0]->arg_arr[0], prog->paths);
 	prog->cmd_arr[1]->path = find_correct_path(prog->cmd_arr[1]->arg_arr[0], prog->paths);
 	pipe(prog->fd);
+	if(prog->fd_infile < 0 || prog->fd_outfile < 0)
+		invalid_file(prog);
+	if(!prog->cmd_arr[0]->path || !prog->cmd_arr[1]->path)
+		invalid_command(prog);
 }

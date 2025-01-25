@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:21:45 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/25 19:13:43 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/25 19:35:06 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_pipex
 
 void	free_prog(t_pipex *prog);
 void	invalid_file(t_pipex *prog);
-void	invalid_command(char *cmd);
+void	invalid_command(t_pipex *prog);
 char	**ft_freeall(char **arr);
 char	**extract_env_path(char **env);
 char	*find_correct_path(char *cmd_arr, char **paths);

@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 12:06:33 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/23 20:16:32 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/25 17:40:38 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,22 @@ char	*find_correct_path(char **cmd_arr, t_pipex *prog)
 {
 	int i = 0;
 	char *path;
+	char *c;
+	char	*temp;
+
+	c = "/";
 	while(prog->paths[i])
 	{
-		path = ft_strjoin(prog->paths[i], cmd_arr[0]);
+		temp = ft_strjoin(prog->paths[i], c);
+		path = ft_strjoin(temp, cmd_arr[0]);
 		if(access(path, F_OK | X_OK) == 0)
 			break ;
 		free(path);
+		free(temp);
 		i++;
 	}
 	if(!path)
-		invalid_command(prog, cmd_arr[0]);
+		invalid_command(cmd_arr[0]);
 	return (path);
 }
 
@@ -82,14 +88,19 @@ void	init_program(t_pipex *prog, char **argv, char **env, int argc)
 	prog->fd_infile = open(argv[1], O_RDWR);
 	prog->fd_outfile = open(argv[argc - 1], O_RDWR);
 	prog->cmd_cnt = argc - 3;
-	pipe(prog->fd);
-	prog->cmd_arr = ft_calloc(prog->cmd_cnt + 1, sizeof(t_cmd));
+	prog->fd = ft_calloc(prog->cmd_cnt - 1, sizeof(int[2]));
 	i = 2;
 	while(i <= prog->cmd_cnt + 1)
 	{
 		prog->cmd_arr[i - 2] = ft_calloc(1, sizeof(t_cmd));
 		prog->cmd_arr[i - 2]->arg_arr = make_command_arr(argv[i]);
 		prog->cmd_arr[i - 2]->path = find_correct_path(prog->cmd_arr[i - 2]->arg_arr, prog);
+		i++;
+	}
+	i = 0;
+	while(i < prog->cmd_cnt - 1)
+	{
+		pipe(prog->fd[i]);
 		i++;
 	}
 }

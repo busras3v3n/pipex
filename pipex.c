@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/23 20:08:49 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/25 17:32:43 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,17 @@ void	process(int i, t_pipex *prog)
 	if(i == 0)
 		fd_in = prog->fd_infile;
 	else
-		fd_in = prog->fd[0];
-	if(!prog->cmd_arr[i + 1])
+		fd_in = prog->fd[i - 1][0];
+	if(i == prog->cmd_cnt - 1)
 		fd_out = prog->fd_outfile;
 	else
-		fd_out = prog->fd[1];
+		fd_out = prog->fd[i][1];
 	dup2(fd_in, STDIN_FILENO);
 	close(fd_in);
 	dup2(fd_out, STDOUT_FILENO);
 	close(fd_out);
+	ft_printf("%s\n", prog->cmd_arr[i]->path);
+	execve(prog->cmd_arr[i]->path, prog->cmd_arr[i]->arg_arr, NULL);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -69,7 +71,8 @@ int	main(int argc, char **argv, char **env)
 		if(id == 0)
 		{
 			ft_printf("child process %d\n", i);
-			return 0;
+			process(i, prog);
+			exit(0);
 		}
 		i++;
 	}

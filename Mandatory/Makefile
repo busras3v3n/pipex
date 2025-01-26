@@ -6,7 +6,7 @@
 #    By: busseven <busseven@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/22 09:59:40 by busseven          #+#    #+#              #
-#    Updated: 2025/01/26 11:48:05 by busseven         ###   ########.fr        #
+#    Updated: 2025/01/26 12:15:11 by busseven         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,8 @@ all: $(LIBFTPRINTF) $(NAME)
 $(NAME): $(LIBFTPRINTF) $(OBJS)
 	cp $(LIBFTPRINTF) $(NAME)
 	ar -rcs $(NAME) $(OBJS)
+	$(CC) $(CFLAGS) pipex.c pipex.a -o pipex
+	rm pipex.a
 
 $(LIBFTPRINTF):
 	$(MAKE) -C ../ft_printf all 

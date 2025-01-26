@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:21:45 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/26 14:47:50 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/25 19:35:06 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ typedef struct s_pipex
 	int		fd_outfile;
 	t_cmd	**cmd_arr;
 	char	**paths;
-	int		(*fd)[2];
+	int		fd[2];
 }	t_pipex;
 
 void	free_prog(t_pipex *prog);

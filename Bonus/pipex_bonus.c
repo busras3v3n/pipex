@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/26 14:57:32 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/26 15:09:59 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,28 +38,34 @@ void	init_program(t_pipex *prog, char **argv, int argc, char **env)
 		i++;
 	}
 	i = 0;
-	prog->fd = ft_calloc(argc - 3, sizeof(int[2]));
+	prog->fd = ft_calloc(argc - 4, sizeof(int[2]));
 	while(prog->fd[i])
 		pipe(fd[i++]);
 	if (prog->fd_infile < 0 || prog->fd_outfile < 0)
 		invalid_file(prog);
 }
 
-void	process(int i, t_pipex *prog, char **env)
+void	process(int i, t_pipex *prog, char **env, int argc)
 {
 	if (i == 0)
 	{
 		dup2(prog->fd_infile, 0);
-		dup2(prog->fd[1], 1);
-		close(prog->fd[0]);
-		execve(prog->cmd_arr[0]->path, prog->cmd_arr[0]->arg_arr, env);
+		dup2(prog->fd[i][1], 1);
+		close(prog->fd[i][0]);
+		execve(prog->cmd_arr[i]->path, prog->cmd_arr[i]->arg_arr, env);
 	}
-	if (i == 1)
+	else if (i == argc - 4)
 	{
 		dup2(prog->fd_outfile, 1);
-		dup2(prog->fd[0], 0);
-		close(prog->fd[1]);
-		execve(prog->cmd_arr[1]->path, prog->cmd_arr[1]->arg_arr, env);
+		dup2(prog->fd[i - 1][0], 0);
+		close(prog->fd[i - 1][1]);
+		execve(prog->cmd_arr[i]->path, prog->cmd_arr[i]->arg_arr, env);
+	}
+	else
+	{
+		dup2(prog->fd[i][1], 1);
+		dup2(prog->fd[i - 1][0], 0);
+		execve(prog->cmd_arr[i]->path, prog->cmd_arr[i]->arg_arr, env);
 	}
 }
 
@@ -75,12 +81,12 @@ int	main(int argc, char **argv, char **env)
 	{
 		prog = ft_calloc(1, sizeof(t_pipex));
 		init_program(prog, argv, env);
-		while (i <= 1)
+		while (prog->cmd_arr[i])
 		{
 			if (id != 0)
 				id = fork();
 			if (id == 0)
-				process(i, prog, env);
+				process(i, prog, env, argc);
 			else
 				ft_printf("parent\n");
 			i++;

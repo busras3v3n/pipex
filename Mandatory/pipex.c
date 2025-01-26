@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/26 12:04:02 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/26 12:19:33 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ void	init_program(t_pipex *prog, char **argv, char **env)
 	t_cmd	*cmd_0;
 	t_cmd	*cmd_1;
 
-	cmd_0 = prog->cmd_arr[0];
-	cmd_1 = prog->cmd_arr[1];
 	prog->fd_infile = open(argv[1], O_RDWR);
 	prog->fd_outfile = open(argv[4], O_RDWR);
 	prog->cmd_arr = ft_calloc(2, sizeof(t_cmd));
+	prog->cmd_arr[0] = ft_calloc(1, sizeof(t_cmd));
+	prog->cmd_arr[1] = ft_calloc(1, sizeof(t_cmd));
 	prog->paths = extract_env_path(env);
-	cmd_0 = ft_calloc(1, sizeof(t_cmd));
-	cmd_1 = ft_calloc(1, sizeof(t_cmd));
+	cmd_0 = prog->cmd_arr[0];
+	cmd_1 = prog->cmd_arr[1];
 	cmd_0->arg_arr = make_command_arr(argv[2]);
 	cmd_1->arg_arr = make_command_arr(argv[3]);
 	cmd_0->path = find_correct_path(cmd_0->arg_arr[0], prog->paths);

@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 12:06:33 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/26 17:07:19 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/28 12:19:12 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ void	free_prog(t_pipex *prog)
 	int	i;
 
 	i = 0;
-	while (prog->cmd_arr[i])
+	while (prog->cmd_arr[i] != NULL)
 	{
 		ft_free_2d_arr(prog->cmd_arr[i]->arg_arr);
 		if(prog->cmd_arr[i]->path)
 			free(prog->cmd_arr[i]->path);
 		free(prog->cmd_arr[i]);
-		close(prog->fd[i][0]);
-		close(prog->fd[i][1]);
+		if(i != 0)
+			free(prog->fd[i - 1]);
 		i++;
 	}
 	close(prog->fd_infile);

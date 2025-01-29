@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/29 15:56:16 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/29 18:48:13 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,26 @@
 #include <stdio.h>
 #include <signal.h>
 
-void	free_prog(t_pipex *prog)
+void	free_prog(t_pipex *prog, int argc)
 {
-	int	i;
-
+	int i;
 	i = 0;
 	close(prog->fd_infile);
 	close(prog->fd_outfile);
-	while (prog->commands[i])
+	while (i < argc - 3)
 	{
 		free_2d_char(prog->commands[i]);
+		if(prog->paths[i])
+			free(prog->paths[i]);
 		if (i != 0)
 		{
 			free(prog->fd[i - 1]);
 		}
 		i++;
 	}
-	free(prog->fd);
-	free_2d_char(prog->paths);
 	free(prog->commands);
+	free(prog->paths);
+	free(prog->fd);
 	free(prog);
 }
 void	init_prog(t_pipex *prog, int argc, char **argv, char **env)
@@ -53,14 +54,17 @@ void	init_prog(t_pipex *prog, int argc, char **argv, char **env)
 	prog->fd = ft_calloc(argc - 4, sizeof(int *));
 	while (i < argc - 3)
 	{
-		prog->commands[i] = ft_split(argv[i + 2], ' ');
-		prog->paths[i] = find_correct_path(prog->commands[i][0], env);
-		if(!prog->paths[i])
-			path_not_found(prog->commands[i][0], prog);
 		if (i != 0)
 		{
 			prog->fd[i - 1] = ft_calloc(2, sizeof(int));
 			pipe(prog->fd[i - 1]);
+		}
+		prog->commands[i] = ft_split(argv[i + 2], ' ');
+		prog->paths[i] = find_correct_path(prog->commands[i][0], env);
+		if(!prog->paths[i])
+		{
+			free_prog(prog, argc);
+			exit(1);
 		}
 		i++;
 	}
@@ -84,7 +88,8 @@ void	process(t_pipex *prog, char **env, int argc, int i)
 	if(execve(prog->paths[i], prog->commands[i], env) == -1)
 	{
 		ft_printf("execve fail\nArgument(s) probably invalid\n");
-		free_prog(prog);
+		free_prog(prog, argc);
+		exit(1);
 	}
 }
 void	wait_for_children(int n)
@@ -123,8 +128,8 @@ int	main(int argc, char **argv, char **env)
 			i++;
 		}
 		wait_for_children(argc - 4);
-		free_prog(prog);
 	}
 	else
 		ft_printf("argc < 5 !\n");
+	free_prog(prog, argc);
 }

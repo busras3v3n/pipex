@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 12:06:33 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/29 14:49:58 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/29 18:49:54 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,12 @@
 #include <fcntl.h>
 #include "pipex.h"
 
-#include <unistd.h>
-#include <sys/wait.h>
-#include "../ft_printf/ft_printf.h"
-#include "../ft_printf/libft/libft.h"
-#include <fcntl.h>
-#include "pipex.h"
 char	**free_2d_char(char **arr)
 {
 	int	i;
 	i = 0;
+	if(!arr)
+		return (NULL);
 	while (arr[i])
 	{
 		free(arr[i]);
@@ -35,6 +31,7 @@ char	**free_2d_char(char **arr)
 	free(arr);
 	return (NULL);
 }
+
 char	**extract_env_path(char **env)
 {
 	int		i;
@@ -55,6 +52,7 @@ char	**extract_env_path(char **env)
 	}
 	return (path_arr);
 }
+
 char	*find_correct_path(char *cmd, char **env)
 {
 	int		i;
@@ -77,6 +75,7 @@ char	*find_correct_path(char *cmd, char **env)
 	free_2d_char(paths);
 	return (NULL);
 }
+
 char	*add_chars(char *str, char a)
 {
 	int i;

@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 12:06:33 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/28 20:43:46 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:49:58 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,12 @@ char	**extract_env_path(char **env)
 	}
 	path_arr = ft_split(env[i] + 5, ':');
 	i = 0;
-	while(path_arr[i])
+	while (path_arr[i])
 	{
 		path_arr[i] = add_chars(path_arr[i], '/');
 		i++;
 	}
-	return(path_arr);
+	return (path_arr);
 }
 char	*find_correct_path(char *cmd, char **env)
 {
@@ -69,7 +69,7 @@ char	*find_correct_path(char *cmd, char **env)
 		if (access(path, F_OK | X_OK) == 0)
 		{
 			free_2d_char(paths);
-			return(path);
+			return (path);
 		}
 		free(path);
 		i++;
@@ -84,7 +84,7 @@ char	*add_chars(char *str, char a)
 
 	i = 0;
 	temp = ft_calloc(ft_strlen(str) + 2, sizeof(char));
-	while(str[i])
+	while (str[i])
 	{
 		temp[i] = str[i];
 		i++;
@@ -92,5 +92,5 @@ char	*add_chars(char *str, char a)
 	temp[i] = a;
 	temp[i + 1] = '\0';
 	free(str);
-	return(temp);
+	return (temp);
 }

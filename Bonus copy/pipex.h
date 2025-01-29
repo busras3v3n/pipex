@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:21:45 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/28 20:08:23 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:49:14 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ typedef struct s_pipex
 	int		**fd;
 }	t_pipex;
 
-void	free_prog(t_pipex *prog, int argc);
+void	free_prog(t_pipex *prog);
 void	invalid_file(t_pipex *prog);
 void	invalid_command(t_pipex *prog, char *cmd);
 char	**ft_freeall(char **arr);
@@ -34,5 +34,6 @@ char	**make_command_arr(char *cmd);
 void	init_program(t_pipex *prog, char **argv, int argc, char **env);
 char	**free_2d_char(char **arr);
 char	*add_chars(char *str, char a);
+void	path_not_found(char *cmd, t_pipex *prog);
 
 #endif

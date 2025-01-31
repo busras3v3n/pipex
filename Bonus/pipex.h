@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:21:45 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/26 17:24:30 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/31 19:49:12 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,26 @@
 
 # include <stdlib.h>
 
-typedef struct s_cmd
-{
-	char	**arg_arr;
-	char	*path;
-}	t_cmd;
-
 typedef struct s_pipex
 {
 	int		fd_infile;
 	int		fd_outfile;
-	t_cmd	**cmd_arr;
-	char	**paths;
 	int		**fd;
+	int		here_doc;
+	int		cmd_cnt;
+	char	*limiter;
+	char	**paths;
+	char	***commands;
 }	t_pipex;
 
+char	*find_correct_path(char *cmd, char **env);
+char	*add_chars(char *str, char a);
+char	**free_2d_char(char **arr);
+void	invalid_file_descriptor(t_pipex *prog);
+void	invalid_command(t_pipex *prog, int i);
 void	free_prog(t_pipex *prog);
-void	invalid_file(t_pipex *prog);
-void	invalid_command(t_pipex *prog, char *cmd);
-char	**ft_freeall(char **arr);
-char	**extract_env_path(char **env);
-char	*find_correct_path(char *cmd_arr, char **paths);
-char	**make_command_arr(char *cmd);
-void	init_program(t_pipex *prog, char **argv, int argc, char **env);
-char	**ft_free_2d_arr(char **arr);
+void	check_for_empty_arg(char **argv);
+int		is_all_space(char *str);
+
 
 #endif

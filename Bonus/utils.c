@@ -1,14 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_bonus.c                                      :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 12:06:33 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/29 18:49:54 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/31 14:56:49 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <unistd.h>
+#include <sys/wait.h>
+#include "../ft_printf/ft_printf.h"
+#include "../ft_printf/libft/libft.h"
+#include <fcntl.h>
+#include "pipex.h"
 
 #include <unistd.h>
 #include <sys/wait.h>
@@ -93,3 +100,4 @@ char	*add_chars(char *str, char a)
 	free(str);
 	return (temp);
 }
+

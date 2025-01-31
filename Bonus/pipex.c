@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/31 14:53:15 by busseven         ###   ########.fr       */
+/*   Updated: 2025/01/31 20:26:19 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,48 +35,112 @@ void	free_prog(t_pipex *prog)
 	free(prog->commands);
 	free(prog->paths);
 }
-void	init_prog(t_pipex *prog, char **argv, char **env)
+void	open_files(char **argv, int argc, t_pipex *prog)
+{
+	if(prog->here_doc == 0)
+	{
+		prog->fd_infile = open(argv[1], O_RDWR);
+		prog->fd_outfile = open(argv[argc - 1], O_RDWR);
+	}
+	else
+	{
+		prog->fd_outfile = open(argv[argc - 1], O_RDWR, O_APPEND);
+		prog->limiter = argv[2];
+	}
+}
+void	wait_for_children(int n)
+{
+	while(n > 0)
+	{
+		wait(NULL);
+		n--;
+	}
+}
+void	wrong_argc()
+{
+	ft_printf("!argc < 6\n");
+	exit(1);
+}
+void	make_pipes(int **fd, int argc, t_pipex *prog)
 {
 	int i;
 
 	i = 0;
-	prog->fd_infile = open(argv[1], O_RDONLY);
-	prog->fd_outfile = open(argv[4], O_CREAT | O_RDWR);
+	while(i < argc - 3 - prog->here_doc)
+	{
+		fd[i] = ft_calloc(2, sizeof(int));
+		pipe(fd[i]);
+		i++;
+	}
+}
+void	init_prog(t_pipex *prog, int argc, char **argv, char **env)
+{
+	int i;
+
+	i = 0;
+	if(!ft_strncmp(argv[1], "here_doc", ft_strlen(argv[1])))
+		prog->here_doc = 1;
+	else
+		prog->here_doc = 0;
+	if(prog->here_doc == 1 && argc < 6)
+		wrong_argc();
+	prog->cmd_cnt = argc - 3 - prog->here_doc;
+	open_files(argv, argc, prog);
 	if((prog->fd_infile < 0) | (prog->fd_outfile < 0))
 		invalid_file_descriptor(prog);
-	prog->commands = ft_calloc(2, sizeof(char **));
-	prog->paths = ft_calloc(2, sizeof(char *));
-	while(i < 2)
+	prog->commands = ft_calloc(argc - 3 - prog->here_doc, sizeof(char **));
+	prog->paths = ft_calloc(argc - 3 - prog->here_doc, sizeof(char *));
+	while(i < argc - 3 - prog->here_doc)
 	{
-		prog->commands[i] = ft_split(argv[i + 2], ' ');
+		prog->commands[i] = ft_split(argv[i + 2 + prog->here_doc], ' ');
 		prog->paths[i] = find_correct_path(prog->commands[i][0], env);
 		if(!prog->paths[i])
 			invalid_command(prog, i);
 		i++;
 	}
-	pipe(prog->fd);
+	prog->fd = ft_calloc(argc - 3 - prog->here_doc, sizeof(int *));
+	make_pipes(prog->fd, argc, prog);
 }
+void	here_doc(t_pipex *prog)
+{
+	char *line;
+	int	stop;
 
+	stop = 0;
+	while(!stop)
+	{
+		line = get_next_line(0);
+		if(!ft_strncmp(line, prog->limiter, ft_strlen(line - 1)))
+		{
+			stop = 1;
+		}
+		free(line);
+	}
+	return;
+}
 void	process(int i, int id, t_pipex *prog, char **env)
 {
+	ft_printf("process %d", i);
 	if(id != 0)
 		id = fork();
 	if(id != 0)
 		return ;
-	if(i == 0)
+	if(i == 0 && prog->here_doc == 1)
+		here_doc(prog);
+	else if(i == 0)
 		dup2(prog->fd_infile, 0);
 	else
 	{
-		dup2(prog->fd[0], 0);
-		close(prog->fd[1]);
+		dup2(prog->fd[i - 1][0], 0);
+		close(prog->fd[i - 1][1]);
 	}
-	if(i == 0)
-	{
-		dup2(prog->fd[1], 1);
-		close(prog->fd[0]);
-	}
-	else
+	if(i == prog->cmd_cnt - 1)
 		dup2(prog->fd_outfile, 1);
+	else
+	{
+		dup2(prog->fd[i][1], 1);
+		close(prog->fd[i][0]);
+	}
 	if(execve(prog->paths[i], prog->commands[i], env) == -1)
 	{
 		ft_printf("execve fail");
@@ -104,22 +168,21 @@ int	main(int argc, char **argv, char **env)
 
 	i = 0;
 	id = 1;
-	if (argc == 5)
+	if (argc >= 5)
 	{
 		check_for_empty_arg(argv);
-		init_prog(&prog, argv, env);
-		while(i < 2)
+		init_prog(&prog, argc, argv, env);
+		while(i < argc - 3)
 		{
 			process(i, id, &prog, env);
-			if(i == 0)
-				close(prog.fd[1]);
-			else
-				close(prog.fd[0]);
+			if(i != 0)
+				close(prog.fd[i - 1][0]);
+			else if(i != prog.cmd_cnt - 1)
+				close(prog.fd[i][1]);
 			i++;
 		}
-		wait(NULL);
-		wait(NULL);
-		free_prog(&prog);
+		ft_printf("waiting....");
+		wait_for_children(argc - 3 - 1 - prog.here_doc);
 	}
 	else
 		ft_printf("incorrect number of arguments\n");

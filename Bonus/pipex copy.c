@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   errors_bonus.c                                     :+:      :+:    :+:   */
+/*   pipex copy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/23 13:57:17 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/26 14:52:40 by busseven         ###   ########.fr       */
+/*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
+/*   Updated: 2025/01/31 20:06:33 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,25 @@
 #include "../ft_printf/libft/libft.h"
 #include <fcntl.h>
 #include "pipex.h"
+#include <stdio.h>
+#include <signal.h>
 
-void	invalid_file(t_pipex *prog)
+int	main(int argc, char **argv)
 {
-	ft_printf("Error\n");
-	if (prog->fd_infile < 0)
-		ft_printf("invalid infile\n");
-	if (prog->fd_outfile < 0)
-		ft_printf("invalid outfile\n");
-	free_prog(prog);
-	exit(1);
-}
+	char *line;
+	int	stop;
 
-void	invalid_command(t_pipex *prog, char *cmd)
-{
-	ft_printf("Error\n");
-	ft_printf("can't find path for %s\n", cmd);
-	free_prog(prog);
-	exit(1);
+	stop = 0;
+	(void)argc;
+	while(!stop)
+	{
+		line = get_next_line(0);
+		if(!line)
+			return 0;
+		if(!ft_strncmp(line, argv[1], ft_strlen(line) - 1))
+		{
+			stop = 1;
+		}
+		free(line);
+	}
 }

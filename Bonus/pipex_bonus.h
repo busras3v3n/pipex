@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:21:45 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/01 17:42:38 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/01 19:16:39 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct s_pipex
 	char	**paths;
 	char	***commands;
 	int		here_doc;
+	int		hd[2];
 }	t_pipex;
 
 char	*find_correct_path(char *cmd, char **env);

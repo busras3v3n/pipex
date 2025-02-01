@@ -6,37 +6,42 @@
 #    By: busseven <busseven@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/22 09:59:40 by busseven          #+#    #+#              #
-#    Updated: 2025/01/26 12:15:11 by busseven         ###   ########.fr        #
+#    Updated: 2025/02/01 15:07:58 by busseven         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRC 		= 	./pipex.c ./utils.c ./errors.c
+SRC 		= 	./Mandatory/pipex.c ./Mandatory/utils.c ./Mandatory/errors.c
+BONUS_SRC	=	./Bonus/pipex_bonus.c ./Bonus/utils_bonus.c ./Bonus/errors_bonus.c
 OBJS 		= $(SRC:.c=.o)
-
-NAME 		= pipex.a
+BONUS_OBJS	= $(BONUS_SRC:.c=.o)
+NAME 		= pipex
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror
-LIBFTPRINTF	= ../ft_printf/libftprintf.a
+LIBFTPRINTF	= ./ft_printf/libftprintf.a
+LFLAGS		= -Lft_printf
+LIBS		= $(LIBFTPRINTF)
 
 all: $(LIBFTPRINTF) $(NAME)
 
-$(NAME): $(LIBFTPRINTF) $(OBJS)
-	cp $(LIBFTPRINTF) $(NAME)
-	ar -rcs $(NAME) $(OBJS)
-	$(CC) $(CFLAGS) pipex.c pipex.a -o pipex
-	rm pipex.a
+$(NAME): $(OBJS) $(LIBFTPRINTF)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LFLAGS) $(LIBS)
 
 $(LIBFTPRINTF):
-	$(MAKE) -C ../ft_printf all 
+	$(MAKE) -C ./ft_printf all 
+
+bonus:  $(BONUS_OBJS) $(LIBFTPRINTF)
+	rm -f pipex
+	$(CC) $(CFLAGS) $(BONUS_OBJS) -o $(NAME) $(LFLAGS) $(LIBS)
 
 fclean: clean
-	make -C ../ft_printf fclean
+	make -C ./ft_printf fclean
 	rm -rf $(NAME)
 
 clean:
 	rm -f $(OBJS)
-	make -C ../ft_printf clean
+	rm -f $(BONUS_OBJS)
+	make -C ./ft_printf clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re bonus

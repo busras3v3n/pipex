@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/01 15:18:38 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/01 17:45:23 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,26 @@
 #include <stdio.h>
 #include <signal.h>
 
+void	here_doc(int fd, char *stop)
+{
+	char *line;
+	char *limiter;
+
+	limiter = ft_calloc(ft_strlen(stop) + 1, sizeof(char));
+	limiter[ft_strlen(stop)] = '\n';
+	while(1)
+	{
+		line = get_next_line(0);
+		write(fd, line, ft_strlen(line));
+		if(!ft_strncmp(line, limiter, ft_strlen(line)))
+		{
+			free(line);
+			free(limiter);
+			return;
+		}
+		free(line);
+	}
+}
 void	free_prog(t_pipex *prog)
 {
 	int i;
@@ -39,28 +59,40 @@ void	free_prog(t_pipex *prog)
 	free(prog->paths);
 	free(prog->fd);
 }
-
+void	open_files(t_pipex *prog, char **argv, int argc)
+{
+	if(prog->here_doc == 1)
+		prog->fd_infile = open("~/temp.txt", O_RDWR | O_APPEND | O_CREAT, 774);
+	else
+		prog->fd_infile = open(argv[1], O_RDWR);
+	prog->fd_outfile = open(argv[argc - 1], O_RDWR | O_CREAT, 774);
+	if((prog->fd_infile < 0) || (prog->fd_outfile < 0))
+		invalid_file_descriptor(prog);
+}
 void	init_prog(t_pipex *prog, int argc, char **argv, char **env)
 {
 	int i;
 
 	i = 0;
-	prog->cmd_cnt = argc - 3;
-	prog->fd_infile = open(argv[1], O_RDWR);
-	prog->fd_outfile = open(argv[argc - 1], O_RDWR | O_CREAT, 774);
-	if((prog->fd_infile < 0) | (prog->fd_outfile < 0))
-		invalid_file_descriptor(prog);
-	prog->fd = ft_calloc(argc - 3, sizeof(int *));
-	prog->commands = ft_calloc(argc - 3, sizeof(char **));
-	prog->paths = ft_calloc(argc - 3, sizeof(char *));
-	while(i < argc - 3)
+	if(!ft_strncmp(argv[1], "here_doc", ft_strlen(argv[1])))
+		prog->here_doc = 1;
+	else
+		prog->here_doc = 0;
+	prog->cmd_cnt = argc - 3 - prog->here_doc;
+	open_files(prog, argv, argc);
+	if(prog->here_doc == 1)
+		here_doc(prog->fd_infile, argv[2]);
+	prog->fd = ft_calloc(argc - 3 - prog->here_doc, sizeof(int *));
+	prog->commands = ft_calloc(argc - 3 - prog->here_doc, sizeof(char **));
+	prog->paths = ft_calloc(argc - 3 - prog->here_doc, sizeof(char *));
+	while(i < argc - 3 - prog->here_doc)
 	{
 		if (i != 0)
 		{
 			prog->fd[i - 1] = ft_calloc(2, sizeof(int));
 			pipe(prog->fd[i - 1]);			
 		}
-		prog->commands[i] = ft_split(argv[i + 2], ' ');
+		prog->commands[i] = ft_split(argv[i + 2 + prog->here_doc], ' ');
 		prog->paths[i] = find_correct_path(prog->commands[i][0], env);
 		if(!prog->paths[i])
 			invalid_command(prog, i);

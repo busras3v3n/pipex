@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 12:06:33 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/31 14:56:49 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/01 14:16:35 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,7 @@
 #include "../ft_printf/ft_printf.h"
 #include "../ft_printf/libft/libft.h"
 #include <fcntl.h>
-#include "pipex.h"
-
-#include <unistd.h>
-#include <sys/wait.h>
-#include "../ft_printf/ft_printf.h"
-#include "../ft_printf/libft/libft.h"
-#include <fcntl.h>
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 char	**free_2d_char(char **arr)
 {

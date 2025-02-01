@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:21:45 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/31 19:49:12 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/01 13:34:59 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ typedef struct s_pipex
 	int		fd_infile;
 	int		fd_outfile;
 	int		**fd;
-	int		here_doc;
 	int		cmd_cnt;
 	char	*limiter;
 	char	**paths;

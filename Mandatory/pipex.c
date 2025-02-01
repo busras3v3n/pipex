@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/01 15:01:26 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/01 17:26:25 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,9 @@ void	init_prog(t_pipex *prog, char **argv, char **env)
 	int i;
 
 	i = 0;
-	prog->fd_infile = open(argv[1], O_RDONLY);
-	prog->fd_outfile = open(argv[4], O_RDWR | O_TRUNC, 0777);
-	if (prog->fd_outfile < 0)
-		prog->fd_outfile = open(argv[4], O_RDWR | O_CREAT | O_TRUNC);
-	if((prog->fd_infile < 0) | (prog->fd_outfile < 0))
+	prog->fd_infile = open(argv[1], O_RDWR);
+	prog->fd_outfile = open(argv[4], O_RDWR | O_CREAT | O_TRUNC, 0777);
+	if((prog->fd_infile < 0) || (prog->fd_outfile < 0))
 		invalid_file_descriptor(prog);
 	prog->commands = ft_calloc(2, sizeof(char **));
 	prog->paths = ft_calloc(2, sizeof(char *));

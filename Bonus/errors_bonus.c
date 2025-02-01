@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:57:17 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/01 14:12:48 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/01 19:15:22 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	wrong_argc()
 
 void	invalid_file_descriptor(t_pipex *prog)
 {
-	if(prog->fd_outfile < 0 || (prog->fd_infile < 0))
+	if((prog->fd_outfile < 0 && prog->here_doc) || (prog->fd_infile < 0))
 	{
 		ft_printf("Invalid file descriptor\n");
 		exit(1);

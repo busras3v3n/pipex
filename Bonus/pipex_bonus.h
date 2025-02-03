@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:21:45 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/03 17:16:36 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 18:42:43 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,6 @@ void	check_for_empty_arg(char **argv);
 int		is_all_space(char *str);
 void	close_pipes(int i, t_pipex *prog);
 void	execve_fail(t_pipex *prog);
+char	*get_next_line2(int fd, int k);
 
 #endif

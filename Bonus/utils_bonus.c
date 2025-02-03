@@ -6,43 +6,36 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 12:06:33 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/03 09:36:52 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 12:34:22 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-#include <unistd.h>
-#include <sys/wait.h>
-#include "../ft_printf/ft_printf.h"
-#include "../ft_printf/libft/libft.h"
-#include <fcntl.h>
 #include "pipex_bonus.h"
-#include <stdio.h>
-#include <signal.h>
 
-int		is_all_space(char *str)
+int	is_all_space(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
-		if(str[i] != ' ')
+		if (str[i] != ' ')
 			return (0);
 		i++;
 	}
-	return(1);
+	return (1);
 }
 
 char	**extract_env_path(char **env)
 {
 	int		i;
 	char	**path_arr;
+
 	i = 0;
 	while (env[i])
 	{
 		if (!ft_strncmp(env[i], "PATH=", 5))
-			break;
+			break ;
 		i++;
 	}
 	path_arr = ft_split(env[i] + 5, ':');
@@ -60,7 +53,7 @@ char	*find_correct_path(t_pipex *prog, char *cmd, char **env)
 	int		i;
 	char	*path;
 	char	**paths;
-	
+
 	i = 0;
 	paths = extract_env_path(env);
 	while (paths[i])
@@ -81,8 +74,8 @@ char	*find_correct_path(t_pipex *prog, char *cmd, char **env)
 
 char	*add_chars(char *str, char a)
 {
-	int i;
-	char *temp;
+	int		i;
+	char	*temp;
 
 	i = 0;
 	temp = ft_calloc(ft_strlen(str) + 2, sizeof(char));
@@ -96,4 +89,3 @@ char	*add_chars(char *str, char a)
 	free(str);
 	return (temp);
 }
-

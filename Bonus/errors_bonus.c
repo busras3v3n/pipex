@@ -6,54 +6,58 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:57:17 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/03 10:50:51 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 12:31:00 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <sys/wait.h>
-#include "../ft_printf/ft_printf.h"
-#include "../ft_printf/libft/libft.h"
-#include <fcntl.h>
 #include "pipex_bonus.h"
 
-void	wrong_argc()
+void	wrong_argc(void)
 {
 	ft_printf("Invalid format\nValid formats:\n");
 	ft_printf("infile cmd ... cmd1 outfile\n");
 	ft_printf("infile here_doc LIMITER cmd ... cmd1 outfile\n");
+	if (prog)
+		free(prog);
 	exit(1);
 }
 
 void	invalid_file_descriptor(t_pipex *prog)
 {
-	if(prog->fd_infile < 0 && !prog->here_doc)
+	if (prog->fd_infile < 0 && !prog->here_doc)
 		ft_printf("Invalid infile\n");
-	if(prog->fd_outfile < 0)
+	if (prog->fd_outfile < 0)
 		ft_printf("Invalid outfile\n");
-	exit(1);
+	free(prog);
+	exit(errno);
 }
 
 void	invalid_command(t_pipex *prog, int i)
 {
-	ft_printf("Error\n");
-	ft_printf("No path for %s\n", prog->commands[i][0]);
+	ft_printf("%s: Command not found", prog->commands[i][0]);
 	free_prog(prog);
-	exit(1);
+	exit(127);
 }
 
 void	check_for_empty_arg(char **argv)
 {
-	int i;
+	int	i;
 
 	i = 2;
-	while(argv[i] && argv[i + 1])
+	while (argv[i] && argv[i + 1])
 	{
-		if(is_all_space(argv[i]) || argv[i][0] == '\0')
+		if (is_all_space(argv[i]) || argv[i][0] == '\0')
 		{
 			ft_printf("Empty argument(s)");
 			exit(1);
 		}
 		i++;
 	}
+}
+
+void	execve_fail(t_pipex *prog)
+{
+	ft_printf("execve failed\n");
+	free_prog(prog);
+	exit(errno);
 }

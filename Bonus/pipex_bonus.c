@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/03 09:16:39 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 10:59:42 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,60 +22,33 @@
 void	here_doc(char *stop, t_pipex *prog)
 {
 	char *line;
-	char *limiter;
-	int i;
 
-	i = 0;
+	if(prog->cmd_cnt < 2)
+		wrong_argc();
 	pipe(prog->hd);
-	limiter = ft_calloc(ft_strlen(stop) + 1, sizeof(char));
-	while(stop[i])
-	{
-		limiter[i] = stop[i];
-		i++;
-	}
-	limiter[ft_strlen(stop)] = '\n';
 	while(1)
 	{
 		line = get_next_line(0);
 		write(prog->hd[1], line, ft_strlen(line));
-		if(!ft_strncmp(line, limiter, ft_strlen(line)))
+		if(!ft_strncmp(line, stop, ft_strlen(stop)))
 		{
 			free(line);
-			free(limiter);
 			close(prog->hd[1]);
 			return;
 		}
 		free(line);
 	}
 }
-void	free_prog(t_pipex *prog)
-{
-	int i;
 
-	i = 0;
-	close(prog->fd_infile);
-	close(prog->fd_outfile);
-	while (i < prog->cmd_cnt)
-	{
-		free_2d_char(prog->commands[i]);
-		if (prog->paths[i] != NULL)
-			free(prog->paths[i]);
-		if (i != 0)
-			free(prog->fd[i - 1]);
-		i++;
-	}
-	free(prog->commands);
-	free(prog->paths);
-	free(prog->fd);
-}
 void	open_files(t_pipex *prog, char **argv, int argc)
 {
 	if(prog->here_doc == 0)
-		prog->fd_infile = open(argv[1], O_RDWR);
-	prog->fd_outfile = open(argv[argc - 1], O_RDWR | O_CREAT | O_TRUNC, 774);
+		prog->fd_infile = open(argv[1], O_RDONLY);
+	prog->fd_outfile = open(argv[argc - 1], O_RDWR | O_CREAT | O_TRUNC, 777);
 	if((!prog->here_doc && prog->fd_infile < 0) || (prog->fd_outfile < 0))
 		invalid_file_descriptor(prog);
 }
+
 void	init_prog(t_pipex *prog, int argc, char **argv, char **env)
 {
 	int i;
@@ -86,6 +59,7 @@ void	init_prog(t_pipex *prog, int argc, char **argv, char **env)
 	else
 		prog->here_doc = 0;
 	prog->cmd_cnt = argc - 3 - prog->here_doc;
+	open_files(prog, argv, argc);
 	if(prog->here_doc == 1)
 		here_doc(argv[2], prog);
 	prog->fd = ft_calloc(argc - 4 - prog->here_doc, sizeof(int *));
@@ -99,12 +73,9 @@ void	init_prog(t_pipex *prog, int argc, char **argv, char **env)
 			pipe(prog->fd[i - 1]);			
 		}
 		prog->commands[i] = ft_split(argv[i + 2 + prog->here_doc], ' ');
-		prog->paths[i] = find_correct_path(prog->commands[i][0], env);
-		if(!prog->paths[i])
-			invalid_command(prog, i);
+		prog->paths[i] = find_correct_path(prog, prog->commands[i][0], env);
 		i++;
 	}
-	open_files(prog, argv, argc);
 }
 
 void	process(int i, int id, t_pipex *prog, char **env)
@@ -133,27 +104,12 @@ void	process(int i, int id, t_pipex *prog, char **env)
 		close(prog->fd[i][0]);
 	}
 	if(execve(prog->paths[i], prog->commands[i], env) == -1)
-	{
 		ft_printf("execve fail");
-		exit(1);
-	}
 }
-int		is_all_space(char *str)
-{
-	int i;
 
-	i = 0;
-	while(str[i])
-	{
-		if(str[i] != ' ')
-			return (0);
-		i++;
-	}
-	return(1);
-}
 int	main(int argc, char **argv, char **env)
 {
-	t_pipex	prog;
+	t_pipex	*prog;
 	int		id;
 	int		i;
 
@@ -162,20 +118,18 @@ int	main(int argc, char **argv, char **env)
 	if (argc >= 5)
 	{
 		check_for_empty_arg(argv);
-		init_prog(&prog, argc, argv, env);
-		while (i < argc - 3 - prog.here_doc)
+		prog = ft_calloc(1, sizeof(t_pipex));
+		init_prog(prog, argc, argv, env);
+		while (i < argc - 3 - prog->here_doc)
 		{
-			process(i, id, &prog, env);
-			if (i != 0)
-				close(prog.fd[i - 1][0]);
-			if (i != prog.cmd_cnt - 1)
-				close(prog.fd[i][1]);
+			process(i, id, prog, env);
+			close_pipes(i, prog);
 			i++;
 		}
 		while(i-- >= 0)
 			wait(NULL);
-		free_prog(&prog);
+		free_prog(prog);
 	}
 	else
-		ft_printf("incorrect number of arguments\n");
+		wrong_argc();
 }

@@ -6,12 +6,12 @@
 #    By: busseven <busseven@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/22 09:59:40 by busseven          #+#    #+#              #
-#    Updated: 2025/02/01 15:07:58 by busseven         ###   ########.fr        #
+#    Updated: 2025/02/03 09:35:19 by busseven         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRC 		= 	./Mandatory/pipex.c ./Mandatory/utils.c ./Mandatory/errors.c
-BONUS_SRC	=	./Bonus/pipex_bonus.c ./Bonus/utils_bonus.c ./Bonus/errors_bonus.c
+BONUS_SRC	=	./Bonus/pipex_bonus.c ./Bonus/utils_bonus.c ./Bonus/errors_bonus.c ./Bonus/utils2_bonus.c
 OBJS 		= $(SRC:.c=.o)
 BONUS_OBJS	= $(BONUS_SRC:.c=.o)
 NAME 		= pipex

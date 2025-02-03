@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:57:17 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/01 19:15:22 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 10:50:51 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,19 @@
 
 void	wrong_argc()
 {
-	ft_printf("!argc < 6\n");
+	ft_printf("Invalid format\nValid formats:\n");
+	ft_printf("infile cmd ... cmd1 outfile\n");
+	ft_printf("infile here_doc LIMITER cmd ... cmd1 outfile\n");
 	exit(1);
 }
 
 void	invalid_file_descriptor(t_pipex *prog)
 {
-	if((prog->fd_outfile < 0 && prog->here_doc) || (prog->fd_infile < 0))
-	{
-		ft_printf("Invalid file descriptor\n");
-		exit(1);
-	}
+	if(prog->fd_infile < 0 && !prog->here_doc)
+		ft_printf("Invalid infile\n");
+	if(prog->fd_outfile < 0)
+		ft_printf("Invalid outfile\n");
+	exit(1);
 }
 
 void	invalid_command(t_pipex *prog, int i)
@@ -39,6 +41,7 @@ void	invalid_command(t_pipex *prog, int i)
 	free_prog(prog);
 	exit(1);
 }
+
 void	check_for_empty_arg(char **argv)
 {
 	int i;

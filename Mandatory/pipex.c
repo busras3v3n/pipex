@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/01 17:26:25 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 10:58:50 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int		is_all_space(char *str)
 }
 int	main(int argc, char **argv, char **env)
 {
-	t_pipex	prog;
+	t_pipex	*prog;
 	int		id;
 	int		i;
 
@@ -108,20 +108,17 @@ int	main(int argc, char **argv, char **env)
 	if (argc == 5)
 	{
 		check_for_empty_arg(argv);
-		init_prog(&prog, argv, env);
+		prog = ft_calloc(1, sizeof(t_pipex));
+		init_prog(prog, argv, env);
 		while(i < 2)
 		{
-			process(i, id, &prog, env);
-			if(i == 0)
-				close(prog.fd[1]);
-			else
-				close(prog.fd[0]);
+			process(i, id, prog, env);
 			i++;
 		}
 		wait(NULL);
 		wait(NULL);
-		free_prog(&prog);
+		free_prog(prog);
 	}
 	else
-		ft_printf("incorrect number of arguments\n");
+		ft_printf("format: ./pipex infile cmd cmd1 outfile\n");
 }

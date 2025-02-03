@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 12:06:33 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/31 14:56:49 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 10:59:18 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,12 @@ char	*add_chars(char *str, char a)
 	temp[i + 1] = '\0';
 	free(str);
 	return (temp);
+}
+void	close_pipes(int i, t_pipex *prog)
+{
+	if(i == 0)
+		close(prog->fd[1]);
+	else
+		close(prog->fd[0]);
 }
 

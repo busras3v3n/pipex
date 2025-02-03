@@ -6,9 +6,10 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 12:06:33 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/01 14:16:35 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 09:36:52 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include <unistd.h>
 #include <sys/wait.h>
@@ -16,20 +17,21 @@
 #include "../ft_printf/libft/libft.h"
 #include <fcntl.h>
 #include "pipex_bonus.h"
+#include <stdio.h>
+#include <signal.h>
 
-char	**free_2d_char(char **arr)
+int		is_all_space(char *str)
 {
-	int	i;
+	int i;
+
 	i = 0;
-	if(!arr)
-		return (NULL);
-	while (arr[i])
+	while(str[i])
 	{
-		free(arr[i]);
+		if(str[i] != ' ')
+			return (0);
 		i++;
 	}
-	free(arr);
-	return (NULL);
+	return(1);
 }
 
 char	**extract_env_path(char **env)
@@ -53,7 +55,7 @@ char	**extract_env_path(char **env)
 	return (path_arr);
 }
 
-char	*find_correct_path(char *cmd, char **env)
+char	*find_correct_path(t_pipex *prog, char *cmd, char **env)
 {
 	int		i;
 	char	*path;
@@ -73,6 +75,7 @@ char	*find_correct_path(char *cmd, char **env)
 		i++;
 	}
 	free_2d_char(paths);
+	invalid_command(prog, i);
 	return (NULL);
 }
 

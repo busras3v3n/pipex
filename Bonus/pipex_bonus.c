@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/01 19:26:31 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 09:16:39 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ void	here_doc(char *stop, t_pipex *prog)
 		write(prog->hd[1], line, ft_strlen(line));
 		if(!ft_strncmp(line, limiter, ft_strlen(line)))
 		{
-			ft_printf("found limiter\n");
 			free(line);
 			free(limiter);
+			close(prog->hd[1]);
 			return;
 		}
 		free(line);

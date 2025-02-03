@@ -6,13 +6,13 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:57:17 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/03 12:31:00 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 17:16:20 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	wrong_argc(void)
+void	wrong_argc(t_pipex *prog)
 {
 	ft_printf("Invalid format\nValid formats:\n");
 	ft_printf("infile cmd ... cmd1 outfile\n");

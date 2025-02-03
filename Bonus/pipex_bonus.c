@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/03 12:33:29 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 17:43:14 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	here_doc(char *stop, t_pipex *prog)
 	char	*line;
 
 	if (prog->cmd_cnt < 2)
-		wrong_argc();
+		wrong_argc(prog);
 	pipe(prog->hd);
 	while (1)
 	{
@@ -116,10 +116,10 @@ int	main(int argc, char **argv, char **env)
 
 	i = 0;
 	id = 1;
+	prog = ft_calloc(1, sizeof(t_pipex));
 	if (argc >= 5)
 	{
 		check_for_empty_arg(argv);
-		prog = ft_calloc(1, sizeof(t_pipex));
 		init_prog(prog, argc, argv, env);
 		while (i < argc - 3 - prog->here_doc)
 		{
@@ -132,5 +132,5 @@ int	main(int argc, char **argv, char **env)
 		free_prog(prog);
 	}
 	else
-		wrong_argc();
+		wrong_argc(prog);
 }

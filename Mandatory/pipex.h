@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:21:45 by busseven          #+#    #+#             */
-/*   Updated: 2025/01/31 14:55:43 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 11:37:53 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 # define PIPEX_H
 
 # include <stdlib.h>
+# include <unistd.h>
+# include <sys/wait.h>
+# include "../ft_printf/ft_printf.h"
+# include "../ft_printf/libft/libft.h"
+# include <fcntl.h>
+# include <errno.h>
 
 typedef struct s_pipex
 {
@@ -32,6 +38,5 @@ void	invalid_command(t_pipex *prog, int i);
 void	free_prog(t_pipex *prog);
 void	check_for_empty_arg(char **argv);
 int		is_all_space(char *str);
-
 
 #endif

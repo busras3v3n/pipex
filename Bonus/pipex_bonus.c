@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/03 10:59:42 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 12:33:29 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,24 @@
 #include "pipex_bonus.h"
 #include <stdio.h>
 #include <signal.h>
+#include <errno.h>
 
 void	here_doc(char *stop, t_pipex *prog)
 {
-	char *line;
+	char	*line;
 
-	if(prog->cmd_cnt < 2)
+	if (prog->cmd_cnt < 2)
 		wrong_argc();
 	pipe(prog->hd);
-	while(1)
+	while (1)
 	{
 		line = get_next_line(0);
 		write(prog->hd[1], line, ft_strlen(line));
-		if(!ft_strncmp(line, stop, ft_strlen(stop)))
+		if (!ft_strncmp(line, stop, ft_strlen(stop)))
 		{
 			free(line);
 			close(prog->hd[1]);
-			return;
+			return ;
 		}
 		free(line);
 	}
@@ -42,35 +43,35 @@ void	here_doc(char *stop, t_pipex *prog)
 
 void	open_files(t_pipex *prog, char **argv, int argc)
 {
-	if(prog->here_doc == 0)
+	if (prog->here_doc == 0)
 		prog->fd_infile = open(argv[1], O_RDONLY);
 	prog->fd_outfile = open(argv[argc - 1], O_RDWR | O_CREAT | O_TRUNC, 777);
-	if((!prog->here_doc && prog->fd_infile < 0) || (prog->fd_outfile < 0))
+	if ((!prog->here_doc && prog->fd_infile < 0) || (prog->fd_outfile < 0))
 		invalid_file_descriptor(prog);
 }
 
 void	init_prog(t_pipex *prog, int argc, char **argv, char **env)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	if(!ft_strncmp(argv[1], "here_doc", ft_strlen(argv[1])))
+	if (!ft_strncmp(argv[1], "here_doc", ft_strlen(argv[1])))
 		prog->here_doc = 1;
 	else
 		prog->here_doc = 0;
 	prog->cmd_cnt = argc - 3 - prog->here_doc;
 	open_files(prog, argv, argc);
-	if(prog->here_doc == 1)
+	if (prog->here_doc == 1)
 		here_doc(argv[2], prog);
 	prog->fd = ft_calloc(argc - 4 - prog->here_doc, sizeof(int *));
 	prog->commands = ft_calloc(argc - 3 - prog->here_doc, sizeof(char **));
 	prog->paths = ft_calloc(argc - 3 - prog->here_doc, sizeof(char *));
-	while(i < argc - 3 - prog->here_doc)
+	while (i < argc - 3 - prog->here_doc)
 	{
 		if (i != 0)
 		{
 			prog->fd[i - 1] = ft_calloc(2, sizeof(int));
-			pipe(prog->fd[i - 1]);			
+			pipe(prog->fd[i - 1]);
 		}
 		prog->commands[i] = ft_split(argv[i + 2 + prog->here_doc], ' ');
 		prog->paths[i] = find_correct_path(prog, prog->commands[i][0], env);
@@ -80,31 +81,31 @@ void	init_prog(t_pipex *prog, int argc, char **argv, char **env)
 
 void	process(int i, int id, t_pipex *prog, char **env)
 {
-	if(id != 0)
+	if (id != 0)
 		id = fork();
-	if(id != 0)
+	if (id != 0)
 		return ;
-	if(i == 0 && prog->here_doc == 1)
+	if (i == 0 && prog->here_doc == 1)
 	{
 		dup2(prog->hd[0], 0);
 		close(prog->hd[1]);
 	}
-	else if(i == 0)
+	else if (i == 0)
 		dup2(prog->fd_infile, 0);
 	else
 	{
 		dup2(prog->fd[i - 1][0], 0);
 		close(prog->fd[i - 1][1]);
 	}
-	if(i == prog->cmd_cnt - 1)
+	if (i == prog->cmd_cnt - 1)
 		dup2(prog->fd_outfile, 1);
 	else
 	{
 		dup2(prog->fd[i][1], 1);
 		close(prog->fd[i][0]);
 	}
-	if(execve(prog->paths[i], prog->commands[i], env) == -1)
-		ft_printf("execve fail");
+	if (execve(prog->paths[i], prog->commands[i], env) == -1)
+		execve_fail(prog);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -126,7 +127,7 @@ int	main(int argc, char **argv, char **env)
 			close_pipes(i, prog);
 			i++;
 		}
-		while(i-- >= 0)
+		while (i-- >= 0)
 			wait(NULL);
 		free_prog(prog);
 	}

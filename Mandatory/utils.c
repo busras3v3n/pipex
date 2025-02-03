@@ -6,29 +6,18 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 12:06:33 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/03 10:59:18 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 11:27:19 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <sys/wait.h>
-#include "../ft_printf/ft_printf.h"
-#include "../ft_printf/libft/libft.h"
-#include <fcntl.h>
-#include "pipex.h"
-
-#include <unistd.h>
-#include <sys/wait.h>
-#include "../ft_printf/ft_printf.h"
-#include "../ft_printf/libft/libft.h"
-#include <fcntl.h>
 #include "pipex.h"
 
 char	**free_2d_char(char **arr)
 {
 	int	i;
+
 	i = 0;
-	if(!arr)
+	if (!arr)
 		return (NULL);
 	while (arr[i])
 	{
@@ -43,11 +32,12 @@ char	**extract_env_path(char **env)
 {
 	int		i;
 	char	**path_arr;
+
 	i = 0;
 	while (env[i])
 	{
 		if (!ft_strncmp(env[i], "PATH=", 5))
-			break;
+			break ;
 		i++;
 	}
 	path_arr = ft_split(env[i] + 5, ':');
@@ -65,7 +55,7 @@ char	*find_correct_path(char *cmd, char **env)
 	int		i;
 	char	*path;
 	char	**paths;
-	
+
 	i = 0;
 	paths = extract_env_path(env);
 	while (paths[i])
@@ -85,8 +75,8 @@ char	*find_correct_path(char *cmd, char **env)
 
 char	*add_chars(char *str, char a)
 {
-	int i;
-	char *temp;
+	int		i;
+	char	*temp;
 
 	i = 0;
 	temp = ft_calloc(ft_strlen(str) + 2, sizeof(char));
@@ -100,11 +90,11 @@ char	*add_chars(char *str, char a)
 	free(str);
 	return (temp);
 }
+
 void	close_pipes(int i, t_pipex *prog)
 {
-	if(i == 0)
+	if (i == 0)
 		close(prog->fd[1]);
 	else
 		close(prog->fd[0]);
 }
-

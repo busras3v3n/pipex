@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:57:17 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/03 17:16:20 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 19:04:48 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	invalid_command(t_pipex *prog, int i)
 	exit(127);
 }
 
-void	check_for_empty_arg(char **argv)
+void	check_for_empty_arg(char **argv, t_pipex *prog)
 {
 	int	i;
 
@@ -48,7 +48,8 @@ void	check_for_empty_arg(char **argv)
 	{
 		if (is_all_space(argv[i]) || argv[i][0] == '\0')
 		{
-			ft_printf("Empty argument(s)");
+			ft_printf("Empty argument(s)\n");
+			free(prog);
 			exit(1);
 		}
 		i++;

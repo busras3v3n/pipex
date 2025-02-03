@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/03 18:42:17 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 19:05:00 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int	main(int argc, char **argv, char **env)
 	prog = ft_calloc(1, sizeof(t_pipex));
 	if (argc >= 5)
 	{
-		check_for_empty_arg(argv);
+		check_for_empty_arg(argv, prog);
 		init_prog(prog, argc, argv, env);
 		while (i < argc - 3 - prog->here_doc)
 		{

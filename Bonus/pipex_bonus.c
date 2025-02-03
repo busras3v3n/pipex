@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:51:25 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/03 17:43:14 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 18:42:17 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,11 @@ void	here_doc(char *stop, t_pipex *prog)
 	pipe(prog->hd);
 	while (1)
 	{
-		line = get_next_line(0);
+		line = get_next_line2(0, 1);
 		write(prog->hd[1], line, ft_strlen(line));
 		if (!ft_strncmp(line, stop, ft_strlen(stop)))
 		{
+			get_next_line2(0, 0);
 			free(line);
 			close(prog->hd[1]);
 			return ;

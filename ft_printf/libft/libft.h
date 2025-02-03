@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 13:52:21 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/03 17:39:43 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/03 18:41:48 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,10 @@ void	ft_lstdelone(t_list *lst, void (*del)(void*));
 void	ft_lstclear(t_list **lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 char	*get_next_line(int fd);
+char	*ft_join(char	*str, char	*joining);
+char	*new_buffer(char	*buffer);
+char	*ft_read_file(int fd, char	*str);
+int		ft_findnewline(char *str);
 char	*ft_join(char	*str, char	*joining);
 
 #endif

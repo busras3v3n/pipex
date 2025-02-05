@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:21:45 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/03 17:20:11 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/05 10:28:11 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include "../ft_printf/ft_printf.h"
 # include "../ft_printf/libft/libft.h"
 # include <fcntl.h>
-# include <errno.h>
 
 typedef struct s_pipex
 {

@@ -6,7 +6,7 @@
 /*   By: busseven <busseven@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:57:17 by busseven          #+#    #+#             */
-/*   Updated: 2025/02/03 19:04:48 by busseven         ###   ########.fr       */
+/*   Updated: 2025/02/05 10:27:07 by busseven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	invalid_file_descriptor(t_pipex *prog)
 	if (prog->fd_outfile < 0)
 		ft_printf("Invalid outfile\n");
 	free(prog);
-	exit(errno);
+	exit(1);
 }
 
 void	invalid_command(t_pipex *prog, int i)
@@ -50,7 +50,7 @@ void	check_for_empty_arg(char **argv, t_pipex *prog)
 		{
 			ft_printf("Empty argument(s)\n");
 			free(prog);
-			exit(1);
+			exit(2);
 		}
 		i++;
 	}
@@ -60,5 +60,5 @@ void	execve_fail(t_pipex *prog)
 {
 	ft_printf("execve failed\n");
 	free_prog(prog);
-	exit(errno);
+	exit(1);
 }

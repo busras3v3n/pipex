@@ -6,7 +6,7 @@
 #    By: busseven <busseven@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/22 09:59:40 by busseven          #+#    #+#              #
-#    Updated: 2025/02/03 09:35:19 by busseven         ###   ########.fr        #
+#    Updated: 2025/03/06 15:06:27 by busseven         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,8 +29,7 @@ $(NAME): $(OBJS) $(LIBFTPRINTF)
 $(LIBFTPRINTF):
 	$(MAKE) -C ./ft_printf all 
 
-bonus:  $(BONUS_OBJS) $(LIBFTPRINTF)
-	rm -f pipex
+bonus:  $(BONUS_OBJS) $(NAME) $(LIBFTPRINTF)
 	$(CC) $(CFLAGS) $(BONUS_OBJS) -o $(NAME) $(LFLAGS) $(LIBS)
 
 fclean: clean
